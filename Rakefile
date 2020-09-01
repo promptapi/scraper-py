@@ -42,5 +42,5 @@ end
 
 desc "Run test"
 task :test do
-  system "python tests/test_bin_checker.py"
+  system "python tests/test_scraper.py"
 end

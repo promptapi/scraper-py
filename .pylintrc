@@ -433,7 +433,8 @@ good-names=i,
            qs,
            fp,
            f,
-           e
+           e,
+           s
 
 # Include a hint for the correct naming format with invalid-name.
 include-naming-hint=no
