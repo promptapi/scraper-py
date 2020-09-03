@@ -1,12 +1,13 @@
 # pylint: disable=R0201,E1101
 
 import os
-# import sys
 import unittest
+
+from console import console
 
 from scraper import Scraper
 
-# from collections import namedtuple
+console = console(source=__name__)
 
 
 EXISTING_PROMPTAPI_TOKEN = os.environ.get('PROMPTAPI_TOKEN', None)
@@ -14,9 +15,14 @@ EXISTING_PROMPTAPI_TOKEN = os.environ.get('PROMPTAPI_TOKEN', None)
 
 class TestSimple(unittest.TestCase):
     def test_api_token(self):
-        scraper = Scraper()
-        scraper.get(dict(foo=1), 22)
-        self.assertTrue(scraper)
+        os.environ['PROMPTAPI_TOKEN'] = ''  # noqa: S105
+
+        scraper = Scraper('https://fake.com/')
+        response = scraper.get()
+        self.assertTrue(response.get('error', None))
+
+        response = scraper.get(params='foo')
+        self.assertTrue(response.get('error', None))
 
 
 if __name__ == '__main__':
