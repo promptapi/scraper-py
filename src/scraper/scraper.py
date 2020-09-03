@@ -139,6 +139,9 @@ class Scraper:
             return dict(error=f'Invalid file extension: {file_extension[1:]}')
 
         save_file = os.path.abspath(filename)
-        with open(save_file, 'w') as fp:
-            fp.write(self.data)
+        try:
+            with open(save_file, 'w') as fp:
+                fp.write(self.data)
+        except FileNotFoundError:
+            return dict(error=f'File not found: {save_file}')
         return dict(file=save_file, size=os.stat(save_file).st_size)

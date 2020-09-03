@@ -5,7 +5,7 @@ from scraper import Scraper
 
 if __name__ == '__main__':
 
-    url = 'https://pypi.org/classifiers1/'
+    url = 'https://pypi.org/classifiers/'
     scraper = Scraper(url)
     response = scraper.get()
 
@@ -19,5 +19,5 @@ if __name__ == '__main__':
         sys.stdout.write(f'headers: {result["headers"]}\n')
         sys.stdout.write(f'status: {status}\n')
 
-        save_result = scraper.save('/tmp/foo.html')  # noqa: S108
+        save_result = scraper.save('/tmpxxx/foo.html')  # noqa: S108
         sys.stdout.write(f'save_result: {save_result}\n')
