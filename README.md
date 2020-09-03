@@ -76,7 +76,7 @@ from scraper import Scraper
         # response['error']  returns error message
         # response['status'] returns http status code
         # {'error': 'Not Found', 'status': 404}
-    print(response)
+        print(response)
     else:
         result = response['result']
         status = response['status']
