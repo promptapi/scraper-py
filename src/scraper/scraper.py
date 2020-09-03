@@ -6,11 +6,8 @@ import re
 from http import HTTPStatus
 
 import requests
-from console import console
 
 __all__ = ['Scraper']
-
-console = console(source=__name__)
 
 REQUIRED_PARAMS = []
 VALID_METHODS = ['GET', 'POST']
@@ -34,7 +31,6 @@ class Scraper:
         self.url = url
         self.timeout = timeout
         self.apikey = None
-        console(url, timeout)
 
     def _validate(self, params):
         apikey = os.environ.get('PROMPTAPI_TOKEN', None)
@@ -58,7 +54,6 @@ class Scraper:
 
     def _http(self, method, params=None, body=None):
         params.update(url=self.url)
-        console('params', params)
         if body is None:
             body = dict()
 
@@ -127,8 +122,5 @@ class Scraper:
         if validation_result.get('error', None):
             return validation_result
         self.timeout = timeout
-        console('valid_params', valid_params)
         response = self._http('GET', valid_params)
         return response
-        # result =
-        # console(result)
