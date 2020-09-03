@@ -7,7 +7,15 @@ if __name__ == '__main__':
 
     url = 'https://pypi.org/classifiers/'
     scraper = Scraper(url)
-    response = scraper.get()
+
+    fetch_params = dict(country='EE')
+    # valid params:
+    # auth_password
+    # auth_username
+    # cookie
+    # country
+    # referer'
+    response = scraper.get(params=fetch_params)
 
     if response.get('error', None):
         sys.stdout.write(f'response: {response}\n')
