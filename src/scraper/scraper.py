@@ -57,7 +57,6 @@ class Scraper:
         params.update(url=self.url)
         if body is None:
             body = dict()
-        print('params', params)
         headers = dict(apikey=self.apikey)
         http_error = None
         try:
@@ -69,10 +68,6 @@ class Scraper:
                 headers=headers,
                 data=body,
             )
-            print(dir(response))
-            print('response', response)
-            print('response', response.url)
-            print('response..', response.text)
             response.raise_for_status()
         except requests.exceptions.Timeout:
             return dict(
@@ -118,7 +113,6 @@ class Scraper:
     def get(self, params=None, timeout=5):
         if params is None:
             params = dict()
-        print(params)
         if not isinstance(params, dict):
             return dict(
                 error='Type error, you need to pass dict',
@@ -128,7 +122,6 @@ class Scraper:
         if validation_result.get('error', None):
             return validation_result
         self.timeout = timeout
-        print(valid_params)
         response = self._http('GET', valid_params)
 
         if response.get('result', None) and response.get('result').get('data', None):
