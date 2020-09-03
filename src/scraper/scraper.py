@@ -31,6 +31,7 @@ class Scraper:
         self.url = url
         self.timeout = timeout
         self.apikey = None
+        self.data = None
 
     def _validate(self, params):
         apikey = os.environ.get('PROMPTAPI_TOKEN', None)
@@ -123,4 +124,21 @@ class Scraper:
             return validation_result
         self.timeout = timeout
         response = self._http('GET', valid_params)
+
+        if response.get('result', None) and response.get('result').get('data', None):
+            self.data = response['result']['data']
         return response
+
+    def save(self, filename):
+        if not self.data:
+            return dict(error='Data is not available')
+
+        _, file_extension = os.path.splitext(filename)
+        file_extension = file_extension.lower()
+        if file_extension != '.html':
+            return dict(error=f'Invalid file extension: {file_extension[1:]}')
+
+        save_file = os.path.abspath(filename)
+        with open(save_file, 'w') as fp:
+            fp.write(self.data)
+        return dict(file=save_file, size=os.stat(save_file).st_size)

@@ -24,9 +24,42 @@ $ pip install pa-scraper
 
 ## Example Usage
 
-@wip
+Examples can be found [here][examples].
+
+```python
+from scraper import Scraper
+
+url = 'https://pypi.org/classifiers/'
+scraper = Scraper(url)
+response = scraper.get()
+
+if response.get('error', None):
+    # response['error']  returns error message
+    # response['status'] returns http status code
+    # {'error': 'Not Found', 'status': 404}
+    print(response)
+else:
+    result = response['result']
+    
+    print(result['headers'])   # returns response headers 
+    print(result['data'])      # returns fetched html
+    print(result['url'])       # returns fetched url
+    print(response['status'])  # returns http status code
+
+    save_result = scraper.save('/tmp/my-html.html')  # save to file
+    if save_result.get('error', None):
+        # we have save error
+        pass
+    else:
+        print(save_result)    # contains saved file path and file size
+        # {'file': '/tmp/my-html.html', 'size': 321322}
+```
 
 ---
+
+## TODO
+
+- Add `xpath` extractor.
 
 ## License
 
@@ -59,3 +92,4 @@ the [code of conduct][coc].
 [scraper-api]:      https://promptapi.com/marketplace/description/scraper-api
 [promptapi-signup]: https://promptapi.com/#signup-form
 [coc]:              https://github.com/promptapi/scraper-py/blob/main/CODE_OF_CONDUCT.md
+[examples]:         https://github.com/promptapi/scraper-py/blob/main/examples/
