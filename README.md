@@ -126,6 +126,13 @@ else:
 
 ```
 
+Default **timeout** value is set to `10` seconds. You can change this while
+initializing the instance:
+
+```python
+scraper = Scraper(url, timeout=50)  # 50 seconds timeout...
+```
+
 ---
 
 ## License
