@@ -1,6 +1,4 @@
 # pylint: disable=C0103
-import sys
-
 from scraper import Scraper
 
 if __name__ == '__main__':
@@ -10,20 +8,31 @@ if __name__ == '__main__':
     response = scraper.get()
 
     if response.get('error', None):
-        sys.stdout.write(f'response: {response}\n')
+        # response['error']  returns error message
+        # response['status'] returns http status code
+
+        # Example: {'error': 'Not Found', 'status': 404}
+        print(response)  # noqa: T001
     else:
-        result = response['result']
+        data = response['result']['data']
+        headers = response['result']['headers']
+        url = response['result']['url']
         status = response['status']
 
-        sys.stdout.write(f'result.keys(): {result.keys()}\n')
-        sys.stdout.write(f'headers: {result["headers"]}\n')
-        sys.stdout.write(f'status: {status}\n')
+        # print(data) # print fetched html, will be long :)
 
-        save_result = scraper.save('/tmp/my-html.html')  # noqa: S108
+        print(headers)  # noqa: T001
+        # {'Content-Length': '321322', 'Content-Type': 'text/html; charset=UTF-8', ... }
+
+        print(status)  # noqa: T001
+        # 200
+
+        save_result = scraper.save('/tmp/my-data.html')  # noqa: S108
+
         if save_result.get('error', None):
-            # we have error!
+            # save error occured...
+            # add you code here...
             pass
-        else:
-            # save completed!
-            pass
-        sys.stdout.write(f'save_result: {save_result}\n')
+
+        print(save_result)  # noqa: T001
+        # {'file': '/tmp/my-data.html', 'size': 321322}

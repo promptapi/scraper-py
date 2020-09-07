@@ -11,7 +11,14 @@ __all__ = ['Scraper']
 
 REQUIRED_PARAMS = []
 VALID_METHODS = ['GET', 'POST']
-VALID_PARAMS = ['auth_password', 'auth_username', 'cookie', 'country', 'referer']
+VALID_PARAMS = [
+    'auth_password',
+    'auth_username',
+    'cookie',
+    'country',
+    'referer',
+    'selector',
+]
 PROMPTAPI_ENDPOINT = os.environ.get(
     'PROMPTAPI_TEST_ENDPOINT', 'https://api.promptapi.com/scraper'
 )
@@ -126,21 +133,32 @@ class Scraper:
 
         if response.get('result', None) and response.get('result').get('data', None):
             self.data = response['result']['data']
+
+        if response.get('result', None) and response.get('result').get(
+            'data-selector', None
+        ):
+            self.data = response['result']['data-selector']
+            response['result']['data'] = self.data
         return response
 
     def save(self, filename):
         if not self.data:
             return dict(error='Data is not available')
 
-        _, file_extension = os.path.splitext(filename)
-        file_extension = file_extension.lower()
-        if file_extension != '.html':
-            return dict(error=f'Invalid file extension: {file_extension[1:]}')
+        save_extension = '.html'
+        save_data = self.data
+        if isinstance(self.data, list):
+            save_extension = '.json'
+            save_data = json.dumps(self.data)
 
-        save_file = os.path.abspath(filename)
+        file_basename, _ = os.path.splitext(filename)
+        file_savename = f'{file_basename}{save_extension}'
+        save_file = os.path.abspath(file_savename)
         try:
             with open(save_file, 'w') as fp:
-                fp.write(self.data)
+                fp.write(save_data)
+        except TypeError:
+            return dict(error='Incorrect data to save...')
         except FileNotFoundError:
             return dict(error=f'File not found: {save_file}')
         return dict(file=save_file, size=os.stat(save_file).st_size)

@@ -27,6 +27,8 @@ $ pip install pa-scraper
 Examples can be found [here][examples].
 
 ```python
+# examples/fetch.py
+
 from scraper import Scraper
 
 url = 'https://pypi.org/classifiers/'
@@ -36,23 +38,33 @@ response = scraper.get()
 if response.get('error', None):
     # response['error']  returns error message
     # response['status'] returns http status code
-    # {'error': 'Not Found', 'status': 404}
-    print(response)
-else:
-    result = response['result']
-    
-    print(result['headers'])   # returns response headers 
-    print(result['data'])      # returns fetched html
-    print(result['url'])       # returns fetched url
-    print(response['status'])  # returns http status code
 
-    save_result = scraper.save('/tmp/my-html.html')  # save to file
+    # Example: {'error': 'Not Found', 'status': 404}
+    print(response)  # noqa: T001
+else:
+    data = response['result']['data']
+    headers = response['result']['headers']
+    url = response['result']['url']
+    status = response['status']
+
+    # print(data) # print fetched html, will be long :)
+
+    print(headers)  # noqa: T001
+    # {'Content-Length': '321322', 'Content-Type': 'text/html; charset=UTF-8', ... }
+
+    print(status)  # noqa: T001
+    # 200
+
+    save_result = scraper.save('/tmp/my-data.html')  # noqa: S108
+
     if save_result.get('error', None):
-        # we have save error
+        # save error occured...
+        # add you code here...
         pass
-    else:
-        print(save_result)    # contains saved file path and file size
-        # {'file': '/tmp/my-html.html', 'size': 321322}
+
+    print(save_result)  # noqa: T001
+    # {'file': '/tmp/my-data.html', 'size': 321322}
+
 ```
 
 You can add url parameters for extra operations. Valid parameters are:
@@ -62,44 +74,59 @@ You can add url parameters for extra operations. Valid parameters are:
 - `cookie`: URL Encoded cookie header.
 - `country`: 2 character country code. If you wish to scrape from an IP address of a specific country.
 - `referer`: HTTP referer header
+- `selector`: CSS style XPath selector such as `a.btn div li`. If `selector`
+  is enabled, returning result will be collection of data and saved file
+  will be in `.json` format.
+
+Here is an example with using url parameters and `selector`:
 
 ```python
+# examples/fetch_with_params.py
+
 from scraper import Scraper
 
-    url = 'https://pypi.org/classifiers/'
-    scraper = Scraper(url)
+url = 'https://pypi.org/classifiers/'
+scraper = Scraper(url)
 
-    fetch_params = dict(country='EE')
-    response = scraper.get(params=fetch_params)
+fetch_params = dict(country='EE', selector='ul li button[data-clipboard-text]')
+response = scraper.get(params=fetch_params)
 
-    if response.get('error', None):
-        # response['error']  returns error message
-        # response['status'] returns http status code
-        # {'error': 'Not Found', 'status': 404}
-        print(response)
-    else:
-        result = response['result']
-        status = response['status']
+if response.get('error', None):
+    # response['error']  returns error message
+    # response['status'] returns http status code
 
-        print(result['headers'])   # returns response headers 
-        print(result['data'])      # returns fetched html
-        print(result['url'])       # returns fetched url
-        print(response['status'])  # returns http status code
+    # Example: {'error': 'Not Found', 'status': 404}
+    print(response)  # noqa: T001
+else:
+    data = response['result']['data']
+    headers = response['result']['headers']
+    url = response['result']['url']
+    status = response['status']
 
-        save_result = scraper.save('/tmp/my-html.html')  # save to file
-        if save_result.get('error', None):
-            # we have save error
-            pass
-        else:
-            print(save_result)    # contains saved file path and file size
-            # {'file': '/tmp/my-html.html', 'size': 321322}
+    # print(data)  # noqa: T001
+    # ['<button class="button button--small margin-top margin-bottom copy-tooltip copy-tooltip-w" ...\n', ]
+
+    print(len(data))  # noqa: T001
+    # 734
+    # we have an array...
+
+    print(headers)  # noqa: T001
+    # {'Content-Length': '321322', 'Content-Type': 'text/html; charset=UTF-8', ... }
+
+    print(status)  # noqa: T001
+    # 200
+
+    save_result = scraper.save('/tmp/my-data.json')  # noqa: S108
+    if save_result.get('error', None):
+        # save error occured...
+        # add you code here...
+        pass
+    print(save_result)  # noqa: T001
+    # {'file': '/tmp/my-data.json', 'size': 174449}
+
 ```
 
 ---
-
-## TODO
-
-- Add `xpath` extractor.
 
 ## License
 
