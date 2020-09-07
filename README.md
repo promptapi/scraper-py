@@ -74,7 +74,7 @@ You can add url parameters for extra operations. Valid parameters are:
 - `cookie`: URL Encoded cookie header.
 - `country`: 2 character country code. If you wish to scrape from an IP address of a specific country.
 - `referer`: HTTP referer header
-- `selector`: CSS style XPath selector such as `a.btn div li`. If `selector`
+- `selector`: CSS style selector path such as `a.btn div li`. If `selector`
   is enabled, returning result will be collection of data and saved file
   will be in `.json` format.
 
