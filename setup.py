@@ -7,7 +7,7 @@ LONG_DESCRIPTION = (CURRENT_WORKING_DIRECTORY / 'README.md').read_text(encoding=
 
 setup(
     name='pa-scraper',
-    version='0.2.1',
+    version='0.2.2',
     description="Python wrapper for Prompt API's Scraper API",
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
