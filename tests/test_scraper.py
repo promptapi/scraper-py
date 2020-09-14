@@ -3,12 +3,7 @@
 import os
 import unittest
 
-from console import console
-
 from scraper import Scraper
-
-console = console(source=__name__)
-
 
 EXISTING_PROMPTAPI_TOKEN = os.environ.get('PROMPTAPI_TOKEN', None)
 
