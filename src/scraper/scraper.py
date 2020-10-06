@@ -60,11 +60,16 @@ class Scraper:
 
         return dict(), valid_params
 
-    def _http(self, method, params=None, body=None):
+    def _http(self, method, params=None, extra_headers=None, body=None):
         params.update(url=self.url)
+
         if body is None:
             body = dict()
+
         headers = dict(apikey=self.apikey)
+        if extra_headers is not None:
+            headers.update(extra_headers)
+
         http_error = None
         try:
             response = requests.request(
@@ -117,7 +122,7 @@ class Scraper:
             )
         return dict(result=result, status=response.status_code)
 
-    def get(self, params=None, timeout=5):
+    def get(self, params=None, headers=None, timeout=5):
         if params is None:
             params = dict()
         if not isinstance(params, dict):
@@ -129,7 +134,7 @@ class Scraper:
         if validation_result.get('error', None):
             return validation_result
         self.timeout = timeout
-        response = self._http('GET', valid_params)
+        response = self._http('GET', valid_params, headers)
 
         if response.get('result', None) and response.get('result').get('data', None):
             self.data = response['result']['data']
